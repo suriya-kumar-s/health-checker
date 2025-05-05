@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Health Checker | BMI & Vitals</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col items-center justify-start py-10 px-4">
+
+  <header class="text-center mb-10">
+    <h1 class="text-4xl font-bold text-yellow-400">🩺 Health Checker</h1>
+    <p class="text-gray-400 mt-2">Get instant health suggestions based on your vitals.</p>
+  </header>
+
+  <div class="bg-gray-900 rounded-xl shadow-xl p-8 w-full max-w-xl">
+    <form id="healthForm" class="space-y-6">
+      <div>
+        <label class="block mb-1 text-gray-300">Height (in cm):</label>
+        <input type="number" id="height" class="w-full px-4 py-2 rounded bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
+      </div>
+      <div>
+        <label class="block mb-1 text-gray-300">Weight (in kg):</label>
+        <input type="number" id="weight" class="w-full px-4 py-2 rounded bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
+      </div>
+      <div>
+        <label class="block mb-1 text-gray-300">Heart Rate (bpm):</label>
+        <input type="number" id="heartRate" class="w-full px-4 py-2 rounded bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400">
+      </div>
+      <div>
+        <label class="block mb-1 text-gray-300">Body Temperature (°C):</label>
+        <input type="number" id="temperature" step="0.1" class="w-full px-4 py-2 rounded bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400">
+      </div>
+      <button type="submit" class="bg-yellow-400 text-black px-6 py-2 rounded hover:bg-yellow-300 transition font-semibold">Get Consultation</button>
+    </form>
+
+    <div id="result" class="mt-8 text-white space-y-3 hidden">
+      <h2 class="text-2xl font-semibold text-green-400">Your Health Report:</h2>
+      <p id="bmiOutput" class="text-yellow-300"></p>
+      <p id="suggestionOutput" class="text-gray-200"></p>
+    </div>
+  </div>
+
+  <footer class="mt-12 text-sm text-gray-500">
+    Developed by <span class="text-yellow-400 font-medium">Suriya Kumar S</span> | BME-A | SRM IST
+  </footer>
+
+  <script>
+    document.getElementById('healthForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const height = parseFloat(document.getElementById('height').value);
+      const weight = parseFloat(document.getElementById('weight').value);
+      const heartRate = parseInt(document.getElementById('heartRate').value);
+      const temperature = parseFloat(document.getElementById('temperature').value);
+
+      const bmi = weight / ((height / 100) ** 2);
+      const bmiText = `BMI: ${bmi.toFixed(1)} - `;
+
+      let status = '';
+      if (bmi < 18.5) status = 'Underweight 🥦';
+      else if (bmi < 25) status = 'Normal ✅';
+      else if (bmi < 30) status = 'Overweight ⚠️';
+      else status = 'Obese ❗';
+
+      let suggestion = '';
+      if (heartRate && (heartRate < 60 || heartRate > 100)) {
+        suggestion += '⚠️ Irregular heart rate detected. Consult a doctor. ';
+      }
+      if (temperature && (temperature < 36.1 || temperature > 37.5)) {
+        suggestion += '🌡️ Unusual body temperature. Monitor your condition. ';
+      }
+
+      if (!suggestion) suggestion = '🎉 All vitals look normal. Stay healthy!';
+
+      document.getElementById('bmiOutput').innerText = bmiText + status;
+      document.getElementById('suggestionOutput').innerText = suggestion;
+      document.getElementById('result').classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
